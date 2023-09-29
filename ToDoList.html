@@ -9,20 +9,30 @@
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
             color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            margin: 0;
+            padding-top: 20px;
+        }
+
+        .container {
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            max-width: 500px;
+            width: 100%;
         }
 
         #taskInputDiv {
-            max-width: 400px;
-            margin: auto;
             margin-bottom: 20px;
         }
 
         #taskList {
-            max-width: 400px;
-            margin: auto;
             padding: 10px;
             border: 1px solid #ccc;
-            background-color: white;
             border-radius: 5px;
         }
 
@@ -47,11 +57,13 @@
     </style>
 </head>
 <body>
-    <div id="taskInputDiv">
-        <input type="text" id="taskInput" placeholder="Enter a task">
-        <button onclick="addTask()">Add Task</button>
+    <div class="container">
+        <div id="taskInputDiv">
+            <input type="text" id="taskInput" placeholder="Enter a task">
+            <button onclick="addTask()">Add Task</button>
+        </div>
+        <div id="taskList"></div>
     </div>
-    <div id="taskList"></div>
 
     <script>
         const taskInput = document.getElementById('taskInput');
@@ -95,4 +107,3 @@
     </script>
 </body>
 </html>
-
