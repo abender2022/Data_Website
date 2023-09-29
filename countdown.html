@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            transition: background-color 0.5s;
+            animation: none;
+        }
+        .container {
+            border: 2px solid #007bff;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        #input-container {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        #input-container input {
+            width: 60px;
+            text-align: center;
+        }
+        #input-container label {
+            margin: 0 5px;
+        }
+        #timer {
+            font-size: 48px;
+        }
+        button {
+            font-size: 24px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .flash {
+            animation: flashBackground 1s infinite alternate;
+        }
+        @keyframes flashBackground {
+            from {
+                background-color: #f0f0f0;
+            }
+            to {
+                background-color: #ff0000;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Simple Countdown Timer</h1>
+    <div class="container">
+        <div id="input-container">
+            <label for="hours">Hours:</label>
+            <input type="number" id="hours" min="0" value="0">
+            <label for="minutes">Minutes:</label>
+            <input type="number" id="minutes" min="0" value="0">
+            <label for="seconds">Seconds:</label>
+            <input type="number" id="seconds" min="0" value="0">
+            <button onclick="startCountdown()">Start</button>
+        </div>
+        <div id="timer">00:00:00</div>
+    </div>
+    
+    <script>
+        let countdown;
+        
+        function startCountdown() {
+            const hours = parseInt(document.getElementById('hours').value);
+            const minutes = parseInt(document.getElementById('minutes').value);
+            const seconds = parseInt(document.getElementById('seconds').value);
+            
+            const totalTimeInSeconds = hours * 3600 + minutes * 60 + seconds;
+            
+            if (isNaN(totalTimeInSeconds) || totalTimeInSeconds <= 0) {
+                alert('Please enter a valid time.');
+                return;
+            }
+            
+            const endTime = Date.now() + (totalTimeInSeconds * 1000);
+            
+            const updateInterval = 1000; // Update the timer every 1 second
+            
+            function update() {
+                const remainingTime = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
+                updateTimerDisplay(remainingTime);
+                
+                if (remainingTime === 0) {
+                    clearInterval(countdown);
+                    playBuzzerSound();
+                    flashScreen();
+                }
+                
+                if (remainingTime > 0) {
+                    requestAnimationFrame(update);
+                }
+            }
+            
+            update(); // Start the initial update
+            countdown = setInterval(update, updateInterval);
+        }
+        
+        function updateTimerDisplay(totalTimeInSeconds) {
+            const hours = Math.floor(totalTimeInSeconds / 3600);
+            const minutes = Math.floor((totalTimeInSeconds % 3600) / 60);
+            const seconds = totalTimeInSeconds % 60;
+            
+            const timerDisplay = document.getElementById('timer');
+            timerDisplay.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        function playBuzzerSound() {
+            const audio = new Audio('buzzer.mp3'); // Replace 'buzzer.mp3' with the path to your buzzer sound file
+            audio.play();
+        }
+        
+        function flashScreen() {
+            document.body.classList.add('flash');
+            setTimeout(() => {
+                document.body.classList.remove('flash');
+            }, 1000); // Flash for 1 second
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Item Picker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Random Item Picker</h2>
+
+    <div>
+        <label for="items">Enter items (comma separated):</label>
+        <input type="text" id="items" placeholder="e.g. Apple, Orange, Banana">
+    </div>
+
+    <button onclick="pickRandomItem()">Pick Random Item</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+    function pickRandomItem() {
+        // Get the input value and split it into an array
+        const items = document.getElementById('items').value.split(',').map(item => item.trim());
+
+        // Ensure there are at least 2 items
+        if (items.length < 2) {
+            alert('Please enter at least 2 items.');
+            return;
+        }
+
+        // Pick a random item from the array
+        const randomItem = items[Math.floor(Math.random() * items.length)];
+
+        // Display the result
+        document.getElementById('result').innerText = 'Chosen item: ' + randomItem;
+    }
+</script>
+
+</body>
+</html>
