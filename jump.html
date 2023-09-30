@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stick Figure Jump Game</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #game-container {
+            position: relative;
+            width: 800px;
+            height: 200px;
+            background-color: #f0f0f0;
+            border: 2px solid black;
+            overflow: hidden;
+        }
+
+        #player {
+            position: absolute;
+            bottom: 0;
+            left: 50px;
+        }
+
+        .obstacle {
+            position: absolute;
+            width: 20px;
+            background-color: red;
+            bottom: 0;
+        }
+
+        #restart-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 20px;
+            cursor: pointer;
+            display: none;
+        }
+
+        #score, #highscore {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="score">Score: 0</div>
+    <div id="highscore">High Score: 0</div>
+    <div id="game-container">
+        <div id="player">
+            <svg height="50" width="30">
+                <circle cx="15" cy="10" r="5" stroke="black" stroke-width="2" fill="black" />
+                <line x1="15" y1="15" x2="15" y2="30" style="stroke:black;stroke-width:2" />
+                <line x1="15" y1="20" x2="5" y2="25" style="stroke:black;stroke-width:2" />
+                <line x1="15" y1="20" x2="25" y2="25" style="stroke:black;stroke-width:2" />
+                <line x1="15" y1="30" x2="5" y2="40" style="stroke:black;stroke-width:2" />
+                <line x1="15" y1="30" x2="25" y2="40" style="stroke:black;stroke-width:2" />
+            </svg>
+        </div>
+    </div>
+    <button id="restart-button">Restart</button>
+
+    <script>
+        const player = document.getElementById('player');
+        const gameContainer = document.getElementById('game-container');
+        const restartButton = document.getElementById('restart-button');
+        const scoreDisplay = document.getElementById('score');
+        const highScoreDisplay = document.getElementById('highscore');
+
+        let playerJumping = false;
+        let gameover = false;
+        let gameStarted = false;
+        let score = 0;
+        let highScore = localStorage.getItem('highScore') || 0;
+        highScoreDisplay.textContent = 'High Score: ' + highScore;
+
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space' && !gameStarted) {
+                gameStarted = true;
+                startGame();
+            } else if (event.code === 'Space' && !playerJumping && !gameover) {
+                playerJumping = true;
+                jump();
+            }
+        });
+
+        restartButton.addEventListener('click', () => {
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('highScore', highScore);
+                highScoreDisplay.textContent = 'High Score: ' + highScore;
+            }
+            location.reload();
+        });
+
+        function jump() {
+            let position = 0;
+            const upInterval = setInterval(() => {
+                if (position > 80) {
+                    clearInterval(upInterval);
+                    const downInterval = setInterval(() => {
+                        if (position <= 0) {
+                            clearInterval(downInterval);
+                            playerJumping = false;
+                        } else {
+                            position -= 5;
+                            player.style.bottom = position + 'px';
+                        }
+                    }, 20);
+                } else {
+                    position += 5;
+                    player.style.bottom = position + 'px';
+                }
+            }, 20);
+        }
+
+        function checkCollision(obstacle) {
+            const playerRect = player.getBoundingClientRect();
+            const obstacleRect = obstacle.getBoundingClientRect();
+            return !(playerRect.right < obstacleRect.left ||
+                     playerRect.left > obstacleRect.right ||
+                     playerRect.bottom < obstacleRect.top ||
+                     playerRect.top > obstacleRect.bottom);
+        }
+
+        function createObstacle() {
+            if (gameover || !gameStarted) return;
+
+            const obstacle = document.createElement('div');
+            obstacle.classList.add('obstacle');
+            obstacle.style.height = (Math.random() > 0.5 ? 40 : 20) + 'px';
+            obstacle.style.right = '-20px';
+            gameContainer.appendChild(obstacle);
+
+            let obstaclePosition = gameContainer.offsetWidth;
+
+            const moveInterval = setInterval(() => {
+                if (gameover) {
+                    clearInterval(moveInterval);
+                    return;
+                }
+
+                if (checkCollision(obstacle)) {
+                    gameover = true;
+                    restartButton.style.display = 'block';
+                    clearInterval(moveInterval);
+                } else if (obstaclePosition < -20) {
+                    clearInterval(moveInterval);
+                    gameContainer.removeChild(obstacle);
+                    score++;
+                    scoreDisplay.textContent = 'Score: ' + score;
+                } else {
+                    obstaclePosition -= 5;
+                    obstacle.style.right = gameContainer.offsetWidth - obstaclePosition + 'px';
+                }
+            }, 20);
+        }
+
+        function startGame() {
+            setInterval(createObstacle, Math.random() * 2000 + 1000); 
+        }
+    </script>
+</body>
+
+</html>
