@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stranger Things Trivia</title>
+    <style>
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            background-image: url('https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/6eeb6f00-16df-4f90-97c4-434402105199/dbsenye-f8ded3ef-979c-402f-8dae-07b34738bd94.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzZlZWI2ZjAwLTE2ZGYtNGY5MC05N2M0LTQzNDQwMjEwNTE5OVwvZGJzZW55ZS1mOGRlZDNlZi05NzljLTQwMmYtOGRhZS0wN2IzNDczOGJkOTQuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0._75K8DmjRD5n6qFDBXnt_aNziLRu_tqbXT8urQQdr08');
+            background-size: cover;
+            background-position: center;
+        }
+
+        #container {
+            background-color: white;
+            border: 2px solid #999;
+            padding: 40px;
+            border-radius: 50px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+	    font-size: 20px;
+	}
+    @keyframes correct {
+        0%, 100% { background-color: white; }
+        25%, 75% { background-color: #006400; } /* Dark green color, smoother transition */
+        50% { background-color: #008000; } 
+    }
+
+    @keyframes wrong {
+        0%, 100% { background-color: white; }
+        25%, 75% { background-color: #8B0000; } /* Dark red color with smoother transition */
+        50% { background-color: #A52A2A; }
+    }
+
+    #container.correct {
+        animation: correct 0.5s ease-in-out;
+    }
+
+    #container.wrong {
+        animation: wrong 0.5s ease-in-out;
+    }
+
+        #score {
+      	   padding: 10px; /* Adjust the padding value as needed */
+	   font-size: 19px
+        }
+
+        }
+
+        #quiz .question {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        #quiz .answers {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+	    padding-top: 20px;
+        }
+
+ 
+    #quiz .answers input:nth-of-type(1) + label {
+        background-color: #FF5733;
+    }
+
+    #quiz .answers input:nth-of-type(2) + label {
+        background-color: #FF5733;
+    }
+
+    #quiz .answers input:nth-of-type(3) + label {
+        background-color: #FF5733;
+    }
+
+    #quiz .answers input:nth-of-type(4) + label {
+        background-color: #FF5733;
+    }
+
+
+        label {
+            background-color: white;
+            border: 2px solid black;
+            padding: 25px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+	    font-size: 20px;
+	    font-weight: bold;
+	    color: #222;
+        }
+
+        input[type="radio"]:checked + label {
+            border-color: #555;
+            background-color: black;
+            box-shadow: 0 0 20px black;
+        }
+
+
+        input[type="radio"]:checked + label.correct {
+            background-color: green;
+            color: white;
+        }
+
+        input[type="radio"]:checked + label.wrong {
+            background-color: red;
+            color: white;
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        #nextButton {
+            display: none;
+            font-size: 25px;
+            padding: 10px 30px;
+            margin: 30px auto;
+            display: block;
+            border: gray;
+            background-color: #222;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+	}	
+
+        #header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+	}
+
+        #container h1, #score {
+            text-align: center;
+	    color: #333;
+	    margin: auto;
+	    color: #ff1515;
+    }
+
+    #score {
+        color: black;
+
+        }
+       @font-face {
+            font-family: 'strangerthings';  /* You can name your font here */
+            src: url('benguiatbold.ttf') format('truetype');  /* Make sure the file name and format are correct */
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            font-family: 'strangerthings';  /* Ensure this name matches the name above */
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="container">
+        <div id="header">
+            <h1>STRANGER THINGS QUIZ</h1>
+            <div id="score">Score: 0</div>
+        </div>
+        <div id="quiz"></div>
+        <button id="nextButton" onclick="showNextQuestion()">Submit</button>
+    </div>
+
+    <script>
+const questions = [
+    {
+        question: "What is the name of the parallel dimension in Stranger Things?",
+        answers: {
+            A: "The Netherworld",
+            B: "The Other Side",
+            C: "The Upside Down",
+            D: "The Shadow Realm"
+        },
+        correctAnswer: "C"
+    },    
+    {
+        question: "What is the guard 'Enzo' real name that helps Hopper in season 4?",
+        answers: {
+            A: "Mikhail",
+            B: "Ivan",
+            C: "Alexei",
+            D: "Dmitri"
+        },
+        correctAnswer: "D"
+    },
+    {
+        question: "What is the start of the secret message Robin cracks in season 3?",
+        answers: {
+           A: "The week is long. The silver cat feeds when yellow meets green in the east.",
+           B: "The day is long. The silver cat feeds when yellow meets green in the east.",
+           C: "The day is long. The silver cat feeds when blue meets yellow in the west.",
+           D: "The week is long. The silver cat feeds when blue meets yellow in the west."
+        },
+        correctAnswer: "D"
+    },
+    {
+        question: "What is Eleven's favorite food?",
+        answers: {
+           A: "Scoops Ahoy Ice Cream",
+           B: "Eggo Waffles",
+           C: "Hawaiian Pizza",
+           D: "Benny's Burgers"
+        },
+        correctAnswer: "B"
+    },
+    {
+        question: "Who is the author of the series of books that Dustin and the gang use to understand the parallel dimension?",
+        answers: {
+           A: "Gary Gygax",
+           B: "Stephen King",
+           C: "J.R.R. Tolkien",
+           D: "George R.R. Martin"
+        },
+        correctAnswer: "A"
+    },
+    {
+        question: "Where did Jim Hopper live after fighting in the Vietnam War and before moving back to Hawkins?",
+        answers: {
+           A: "Chicago",
+           B: "Indianapolis",
+           C: "New York City",
+           D: "California"
+        },
+        correctAnswer: "C"
+    },
+    {
+        question: "Who plays the character Jonathan Byers?",
+        answers: {
+           A: "Charlie Heaton",
+           B: "Joe Keery",
+           C: "Joseph Quinn",
+           D: "Dacre Montgomery"
+        },
+        correctAnswer: "A"
+    },
+    {
+        question: "Who created Stranger Things?",
+        answers: {
+           A: "The Russo Brothers",
+           B: "The Duffer Brothers",
+           C: "The Safdie Brothers",
+           D: "The Nolan Brothers"
+        },
+        correctAnswer: "B"
+    },
+    {
+        question: "What year was the first season released?",
+        answers: {
+           A: "2014",
+           B: "2015",
+           C: "2016",
+           D: "2017"
+        },
+        correctAnswer: "C"
+    },
+    {
+        question: "Where is the majority of the show filmed?",
+        answers: {
+           A: "Indiana",
+           B: "Vancouver",
+           C: "California",
+           D: "Georgia"
+        },
+        correctAnswer: "D"
+    },
+    {
+        question: "Who owns Melvalds where Joyce works?",
+        answers: {
+           A: "Jeffrey",
+           B: "Donald",
+           C: "Bob",
+           D: "gary"
+        },
+        correctAnswer: "B"
+    },
+    {
+        question: "What is the name of Hoppers ex wife?",
+        answers: {
+            A: "Marissa",
+            B: "Chrissy",
+            C: "Joyce",
+            D: "Diane"
+        },
+        correctAnswer: "D"
+    },
+    {
+        question: "What is the name of the arcade in season 2?",
+        answers: {
+            A: "Palace Arcade",
+            B: "Nighthawk Arcade",
+            C: "Pakmann Arcade",
+            D: "Westworld Arcade"
+        },
+        correctAnswer: "A"
+    },
+    {
+        question: "What year does season 4 take place?",
+        answers: {
+            A: "1983",
+            B: "1984",
+            C: "1985",
+            D: "1986"
+        },
+        correctAnswer: "D"
+    },
+ ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function showQuestion(questionIndex) {
+            const question = questions[questionIndex];
+            const quizContainer = document.getElementById('quiz');
+            let answers = [];
+            for (let letter in question.answers) {
+                answers.push(
+                    `<input type="radio" id="${letter}" name="question" value="${letter}">
+                    <label for="${letter}">
+                        ${question.answers[letter]}
+                    </label>`
+                );
+            }
+            quizContainer.innerHTML =
+                `<div class="question">${question.question}</div>
+                <div class="answers">${answers.join('')}</div>`;
+            document.getElementById('nextButton').style.display = 'block';
+        }
+
+ function showNextQuestion() {
+        const container = document.getElementById('container');
+        const selectedAnswer = document.querySelector('input[name="question"]:checked');
+        if (!selectedAnswer) {
+            alert('Please select an answer!');
+            return;
+        }
+
+        const isCorrect = selectedAnswer.value === questions[currentQuestionIndex].correctAnswer;
+
+        if (isCorrect) {
+            score++;
+            selectedAnswer.nextElementSibling.classList.add('correct');
+            container.classList.add('correct');  // Added this line
+        } else {
+            selectedAnswer.nextElementSibling.classList.add('wrong');
+            container.classList.add('wrong');  // Added this line
+        }
+
+        document.getElementById('score').textContent = 'Score: ' + score;
+
+        setTimeout(function() {
+            container.classList.remove('correct', 'wrong');  // Added this line to remove the classes after showing the animation
+
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion(currentQuestionIndex);
+            } else {
+                document.getElementById('nextButton').style.display = 'none';
+                document.getElementById('quiz').innerHTML = 'Quiz completed! Your score is: ' + score;
+            }
+        }, 500);  // Adjusted the timeout to match the animation duration
+    }
+        showQuestion(currentQuestionIndex);
+    </script>
+</body>
+
+</html>
