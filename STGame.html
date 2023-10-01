@@ -317,6 +317,16 @@ const questions = [
         },
         correctAnswer: "D"
     },
+    {
+        question: "Where does Nancy and Jonathon work in season 3?",
+        answers: {
+            A: "Hawk Theater",
+            B: "Scoops Ahoy",
+            C: "The Hawkins Post",
+            D: "The Family Video Store"
+        },
+        correctAnswer: "C"
+    },  
  ];
 
         let currentQuestionIndex = 0;
@@ -369,7 +379,7 @@ const questions = [
                 showQuestion(currentQuestionIndex);
             } else {
                 document.getElementById('nextButton').style.display = 'none';
-                document.getElementById('quiz').innerHTML = 'Quiz completed! Your score is: ' + score;
+                document.getElementById('quiz').innerHTML = 'Quiz completed! Your score is: ' + score + ' out of ' + questions.length;
             }
         }, 500);  // Adjusted the timeout to match the animation duration
     }
