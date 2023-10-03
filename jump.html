@@ -14,6 +14,9 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+ 	    background-image: url('https://www.publicdomainpictures.net/pictures/130000/nahled/red-top-gradient-background.jpg');
+            background-size: cover;
+            background-position: center;
         }
 
         #game-container {
@@ -47,8 +50,15 @@
         }
 
         #score, #highscore {
-            font-size: 24px;
+            font-size: 28px;
             margin-bottom: 20px;
+
+        }
+        #instructions {
+            font-size: 26px;
+            margin-bottom: 20px;
+            color: black;
+	    padding-top: 60px;
         }
     </style>
 </head>
@@ -69,13 +79,14 @@
         </div>
     </div>
     <button id="restart-button">Restart</button>
-
+    <div id="instructions">Press Spacebar to Begin</div> 
     <script>
         const player = document.getElementById('player');
         const gameContainer = document.getElementById('game-container');
         const restartButton = document.getElementById('restart-button');
         const scoreDisplay = document.getElementById('score');
         const highScoreDisplay = document.getElementById('highscore');
+        const instructions = document.getElementById('instructions');
 
         let playerJumping = false;
         let gameover = false;
@@ -87,6 +98,7 @@
         document.addEventListener('keydown', (event) => {
             if (event.code === 'Space' && !gameStarted) {
                 gameStarted = true;
+                instructions.textContent = 'Jump over the obstacles using your spacebar';
                 startGame();
             } else if (event.code === 'Space' && !playerJumping && !gameover) {
                 playerJumping = true;
